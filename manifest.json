@@ -2,12 +2,8 @@
     "manifest_version": 3,
     "name": "Auto Clear History",
     "version": "1.0",
-    "description": "Supprime automatiquement l'historique à la fermeture du navigateur.",
-    "permissions": ["browsingData"],
+    "permissions": ["browsingData", "tabs"],
     "background": {
         "service_worker": "background.js"
-    },
-    "host_permissions": [
-        "<all_urls>"
-    ]
+    }
 }
