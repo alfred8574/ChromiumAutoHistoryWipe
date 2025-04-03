@@ -15,6 +15,12 @@ function detectBrowser() {
 
 const browserType = detectBrowser();
 
+// Si le navigateur n'est pas basé sur Chromium, arrêter l'exécution
+if (browserType !== "chrome") {
+    console.warn("Navigateur non pris en charge. Le script ne sera pas exécuté.");
+    return;
+}
+
 function updateActivity() {
     lastActivityTime = Date.now();
 }
@@ -29,51 +35,23 @@ function checkInactivity() {
 function clearHistory() {
     const sinceTime = Date.now() - INACTIVITY_LIMIT;
 
-    if (browserType === "chrome") {
-        chrome.browsingData.remove({
-            since: sinceTime
-        }, {
-            history: true
-        }, () => {
-            console.log("Historique supprimé (Chrome/Chromium).");
-        });
-    } else if (browserType === "firefox") {
-        browser.browsingData.remove({
-            since: sinceTime
-        }, {
-            history: true
-        }).then(() => {
-            console.log("Historique supprimé (Firefox).");
-        }).catch((error) => {
-            console.error("Erreur lors de la suppression de l'historique (Firefox) :", error);
-        });
-    } else {
-        console.warn("Navigateur non supporté. Impossible de supprimer l'historique.");
-    }
+    chrome.browsingData.remove({
+        since: sinceTime
+    }, {
+        history: true
+    }, () => {
+        console.log("Historique supprimé (Chrome/Chromium).");
+    });
 }
 
 function clearHistoryHourly() {
-    if (browserType === "chrome") {
-        chrome.browsingData.remove({
-            since: 0
-        }, {
-            history: true
-        }, () => {
-            console.log("Historique supprimé toutes les heures (Chrome/Chromium).");
-        });
-    } else if (browserType === "firefox") {
-        browser.browsingData.remove({
-            since: 0
-        }, {
-            history: true
-        }).then(() => {
-            console.log("Historique supprimé toutes les heures (Firefox).");
-        }).catch((error) => {
-            console.error("Erreur lors de la suppression de l'historique (Firefox) :", error);
-        });
-    } else {
-        console.warn("Navigateur non supporté. Impossible de supprimer l'historique.");
-    }
+    chrome.browsingData.remove({
+        since: 0
+    }, {
+        history: true
+    }, () => {
+        console.log("Historique supprimé toutes les heures (Chrome/Chromium).");
+    });
 }
 
 chrome.tabs.onActivated.addListener(updateActivity);
